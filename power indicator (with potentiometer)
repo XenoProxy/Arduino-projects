@@ -1,0 +1,51 @@
+#define led6 7
+#define led5 6
+#define led4 5
+#define led3 4
+#define led2 3
+#define led1 2
+#define pot 0
+
+void setup() {
+pinMode(led1, OUTPUT);
+pinMode(led2, OUTPUT);
+pinMode(led3, OUTPUT);
+pinMode(led4, OUTPUT);
+pinMode(led5, OUTPUT);
+pinMode(led6, OUTPUT);
+pinMode(pot, INPUT);
+}
+
+void loop() {
+  int x;
+  x = analogRead(pot) / 4;
+  //зажигание
+  if (x <= 37){
+    analogWrite(led1, 225);
+  }if (x > 37 && x <= 75){
+    analogWrite(led2, 255);
+  }if ( x > 75 && x <= 112){
+    analogWrite(led3, 255);
+  }if (x > 112 && x <= 150 ){
+    analogWrite(led4, 255);
+  }if (x > 150 && x <= 187 ){
+    analogWrite(led5, 255);
+  }if (x > 187 && x <= 255){
+    analogWrite(led6, 255);
+  }  
+  //гашение
+   if (x <= 37){
+    analogWrite(led1, 0);
+  }if (x > 37 && x > 75){
+    analogWrite(led2, 0);
+  }if ( x > 75 && x > 112){
+    analogWrite(led3, 0);
+  }if (x > 112 && x > 150 ){
+    analogWrite(led4, 0);
+  }if (x > 150 && x > 187 ){
+    analogWrite(led5, 0);
+  }if (x > 187 && x > 255){
+    analogWrite(led6, 0);
+  }  
+   
+}
