@@ -1,0 +1,27 @@
+int dataPin = 9;
+int latchPin = 10;
+int clockPin = 11;
+
+#define pot A0
+
+void setup() {
+  pinMode(pot, INPUT);
+  Serial.begin(9600);
+  pinMode(clockPin, OUTPUT);
+  pinMode(dataPin, OUTPUT);
+  pinMode(latchPin, OUTPUT);
+  digitalWrite(latchPin, HIGH);
+  }
+
+void loop() {
+  int x, y;
+  x = analogRead(pot) / 60;
+    digitalWrite(latchPin, LOW);
+    shiftOut(dataPin, clockPin, LSBFIRST, 0b1010101);
+    digitalWrite(latchPin, HIGH);
+    delay(0);
+    digitalWrite(latchPin, LOW);
+    shiftOut(dataPin, clockPin, LSBFIRST, 0b0000000);
+    digitalWrite(latchPin, HIGH);
+    delay(x);
+}
