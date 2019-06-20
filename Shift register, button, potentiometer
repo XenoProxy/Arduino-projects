@@ -1,0 +1,77 @@
+#include <Bounce2.h>
+int dataPin = 9;
+int latchPin = 10;
+int clockPin = 11;
+byte conf = B10101010; // настройка для 1 диода.
+int led_conf[8]; // набор настроек для всех диодов.
+ 
+#define pot A0
+#define BUTTON 8
+
+Bounce bouncer = Bounce(BUTTON,5); 
+//задаем начальное состояние светодиода "выключен"
+//int ledValue = LOW;
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(pot, INPUT);
+  pinMode(clockPin, OUTPUT);
+  pinMode(dataPin, OUTPUT);
+  pinMode(latchPin, OUTPUT);
+  pinMode(BUTTON,INPUT);
+  digitalWrite(latchPin, HIGH);
+}
+
+int potRead (){ //чтение значения с потенциометра
+  int x = analogRead(pot) / 4;
+  return map (x, 0, 255, 0, 9); 
+}
+
+void buttRead(byte mask){ //чтение значения с кнопки  
+  //если сменилось состояние кнопки
+  if ( bouncer.update() ) {
+    //если считано значение 1
+    if ( bouncer.read() == HIGH) {
+      conf = conf ^ mask;
+    }
+  }   
+}
+
+void writeLedsData (byte data) { //зажигание светодиода
+    digitalWrite(latchPin, LOW);
+    shiftOut(dataPin, clockPin, LSBFIRST, data);
+    digitalWrite(latchPin, HIGH);
+}
+
+void handleLeds (byte conf, bool blinking, byte showOnly) { //мигание   
+  if(blinking == 0) {
+    writeLedsData(conf);
+  } else {
+    if(showOnly == 0){
+      if (millis()%250 < 125) {
+        writeLedsData(B00000000);
+      } else {
+        writeLedsData(conf);
+      }
+    } else {
+      if (millis()%250 < 125) {
+        writeLedsData(showOnly);
+      } else{ 
+        writeLedsData(conf & showOnly);
+      }
+    }
+  }  
+}
+ 
+void loop() { 
+  //выбор режима и диода.
+  int n = potRead();
+  byte mask = B00000001 << n - 1;// сдвиг влево на 1 бит.
+  buttRead(mask);
+  if ( n == 0){
+    handleLeds(conf, 0, 0);      
+  }else {
+    handleLeds(conf, 1, mask);       
+  } 
+}
+ 
