@@ -1,0 +1,163 @@
+#define SPEED_LEFT 5
+#define SPEED_RIGHT 3
+#define DIR_LEFT 6
+#define DIR_RIGHT 11
+
+#define SENSOR_PIN1 A2
+#define SENSOR_PIN2 A3
+#define SENSOR_PIN3 A4
+#define SENSOR_PIN4 A5
+//----------------------------------
+
+int data = 1;
+
+void runForward()
+{
+  analogWrite(SPEED_LEFT, 255);
+  analogWrite(SPEED_RIGHT, 50);
+  digitalWrite(DIR_LEFT, LOW);
+  digitalWrite(DIR_RIGHT, LOW);
+}
+
+void steerRight()
+{
+  analogWrite(SPEED_RIGHT, 255);
+  analogWrite(SPEED_LEFT, 0);
+  digitalWrite(DIR_LEFT, LOW);
+  digitalWrite(DIR_RIGHT, LOW);
+}
+
+void steerLeft()
+{
+  analogWrite(SPEED_LEFT, 255);
+  analogWrite(SPEED_RIGHT, 0);
+  digitalWrite(DIR_LEFT, LOW);
+  digitalWrite(DIR_RIGHT, LOW);
+}
+
+void setup() {
+  digitalWrite(13, LOW);
+  // put your setup code here, to run once:
+  pinMode(SPEED_LEFT, OUTPUT);
+  pinMode(SPEED_RIGHT, OUTPUT);
+  pinMode(DIR_LEFT, OUTPUT);
+  pinMode(DIR_RIGHT, OUTPUT);
+  pinMode(13, OUTPUT);
+  pinMode(SENSOR_PIN1, INPUT);
+  pinMode(SENSOR_PIN2, INPUT);
+  pinMode(SENSOR_PIN3, INPUT);
+  pinMode(SENSOR_PIN4, INPUT);
+  pinMode(12, INPUT);
+  digitalWrite(13, LOW);
+  Serial.begin(9600);
+  delay(100);
+
+}
+
+
+void loop() {
+  /*start = digitalRead(12);
+    Serial.println(start);
+    Serial.println("START =");
+    digitalWrite(13, LOW);*/
+  while (digitalRead(12)) {}
+  analogWrite(SPEED_RIGHT, 255 / data);
+  delay(50);
+  while (1)
+  {
+    //Serial.println("After");
+    /*
+
+        Serial.println(analogRead(SENSOR_PIN1));*/
+    if (digitalRead(12) == 0)
+    {
+      analogWrite(SPEED_LEFT, 255 / data);
+      analogWrite(SPEED_RIGHT, 47 / data);
+      digitalWrite(DIR_LEFT, LOW);
+      digitalWrite(DIR_RIGHT, LOW);
+      delay(100);
+    }
+
+    else if (analogRead(SENSOR_PIN1) < 90)
+    {
+      analogWrite(SPEED_LEFT, 0 / data);
+      analogWrite(SPEED_RIGHT, 80 / data);
+      digitalWrite(DIR_LEFT, LOW);
+      digitalWrite(DIR_RIGHT, LOW);
+      while (analogRead(SENSOR_PIN3) > 100)
+      {
+        if ((analogRead(SENSOR_PIN4) < 100 && analogRead(SENSOR_PIN1) < 100) ||
+            (analogRead(SENSOR_PIN3) < 100 && analogRead(SENSOR_PIN2) < 100) ||
+            (analogRead(SENSOR_PIN4) < 100 && analogRead(SENSOR_PIN2) < 100) ||
+            (analogRead(SENSOR_PIN3) < 100 && analogRead(SENSOR_PIN1) < 100) ||
+            (analogRead(SENSOR_PIN4) < 100 && analogRead(SENSOR_PIN3) < 100 && analogRead(SENSOR_PIN2) < 100) ||
+            (analogRead(SENSOR_PIN3) < 100 && analogRead(SENSOR_PIN2) < 100 && analogRead(SENSOR_PIN1) < 100) ||
+            (analogRead(SENSOR_PIN4) < 100 && analogRead(SENSOR_PIN2) < 100 && analogRead(SENSOR_PIN1) < 100) ||
+            (analogRead(SENSOR_PIN4) < 100 && analogRead(SENSOR_PIN3) < 100 && analogRead(SENSOR_PIN1) < 100) ||
+            (analogRead(SENSOR_PIN4) < 100 && analogRead(SENSOR_PIN2) < 100 && analogRead(SENSOR_PIN1) < 100))
+        {
+          analogWrite(SPEED_LEFT, 255 / data);
+          analogWrite(SPEED_RIGHT, 55 / data);
+          digitalWrite(DIR_LEFT, LOW);
+          digitalWrite(DIR_RIGHT, LOW);
+          //delay(30);
+          break;
+        }
+      }
+    }
+
+    else if (analogRead(SENSOR_PIN4) < 90)
+    {
+      analogWrite(SPEED_LEFT, 230 / data);
+      analogWrite(SPEED_RIGHT, 0 / data);
+      digitalWrite(DIR_LEFT, LOW);
+      digitalWrite(DIR_RIGHT, LOW);
+      while (analogRead(SENSOR_PIN2) > 100)
+      {
+        if ((analogRead(SENSOR_PIN4) < 100 && analogRead(SENSOR_PIN1) < 100) ||
+            (analogRead(SENSOR_PIN3) < 100 && analogRead(SENSOR_PIN2) < 100) ||
+            (analogRead(SENSOR_PIN4) < 100 && analogRead(SENSOR_PIN2) < 100) ||
+            (analogRead(SENSOR_PIN3) < 100 && analogRead(SENSOR_PIN1) < 100) ||
+            (analogRead(SENSOR_PIN4) < 100 && analogRead(SENSOR_PIN3) < 100 && analogRead(SENSOR_PIN2) < 100) ||
+            (analogRead(SENSOR_PIN3) < 100 && analogRead(SENSOR_PIN2) < 100 && analogRead(SENSOR_PIN1) < 100) ||
+            (analogRead(SENSOR_PIN4) < 100 && analogRead(SENSOR_PIN2) < 100 && analogRead(SENSOR_PIN1) < 100) ||
+            (analogRead(SENSOR_PIN4) < 100 && analogRead(SENSOR_PIN3) < 100 && analogRead(SENSOR_PIN1) < 100) ||
+            (analogRead(SENSOR_PIN4) < 100 && analogRead(SENSOR_PIN2) < 100 && analogRead(SENSOR_PIN1) < 100))
+        {
+          analogWrite(SPEED_LEFT, 255 / data);
+          analogWrite(SPEED_RIGHT, 55 / data);
+          digitalWrite(DIR_LEFT, LOW);
+          digitalWrite(DIR_RIGHT, LOW);
+
+          //delay(30);
+          break;
+        }
+      }
+    }
+    else if ((analogRead(SENSOR_PIN4) < 100 && analogRead(SENSOR_PIN1) < 100) ||
+             (analogRead(SENSOR_PIN3) < 100 && analogRead(SENSOR_PIN2) < 100) ||
+             (analogRead(SENSOR_PIN4) < 100 && analogRead(SENSOR_PIN2) < 100) ||
+             (analogRead(SENSOR_PIN3) < 100 && analogRead(SENSOR_PIN1) < 100) ||
+             (analogRead(SENSOR_PIN4) < 100 && analogRead(SENSOR_PIN3) < 100 && analogRead(SENSOR_PIN2) < 100) ||
+             (analogRead(SENSOR_PIN3) < 100 && analogRead(SENSOR_PIN2) < 100 && analogRead(SENSOR_PIN1) < 100) ||
+             (analogRead(SENSOR_PIN4) < 100 && analogRead(SENSOR_PIN2) < 100 && analogRead(SENSOR_PIN1) < 100) ||
+             (analogRead(SENSOR_PIN4) < 100 && analogRead(SENSOR_PIN3) < 100 && analogRead(SENSOR_PIN1) < 100) ||
+             (analogRead(SENSOR_PIN4) < 100 && analogRead(SENSOR_PIN2) < 100 && analogRead(SENSOR_PIN1) < 100))
+    {
+      analogWrite(SPEED_LEFT, 255 / data);
+      analogWrite(SPEED_RIGHT, 55 / data);
+      digitalWrite(DIR_LEFT, LOW);
+      digitalWrite(DIR_RIGHT, LOW);
+      delay(100);
+    }
+    else
+    {
+      analogWrite(SPEED_LEFT, 255 / data);
+      analogWrite(SPEED_RIGHT, 55 / data);
+      digitalWrite(DIR_LEFT, LOW);
+      digitalWrite(DIR_RIGHT, LOW);
+    }
+    digitalWrite(13, HIGH);
+
+  }
+}
